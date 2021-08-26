@@ -1,19 +1,17 @@
 import React from 'react';
 import {
-  Box,
   Container,
   makeStyles,
-  Paper,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
-  TableRow,
-  Typography
+  TableRow
 } from '@material-ui/core';
 import { GetServerSideProps, NextPage } from 'next';
 import Head from 'next/head';
+import Link from 'next/link';
 import { Game } from 'types/types';
 import { getGames } from 'services/airtable';
 import { theme } from 'styles/theme';
@@ -41,7 +39,7 @@ const GamesPage: NextPage<Props> = ({ games }) => {
         <title>Games</title>
       </Head>
       <TableContainer>
-        <Table size="small"  className={main}>
+        <Table size="small" className={main}>
           <TableHead>
             <TableRow>
               <TableCell>Date</TableCell>
@@ -54,7 +52,11 @@ const GamesPage: NextPage<Props> = ({ games }) => {
           <TableBody>
             {games.map((game) => (
               <TableRow key={game.id}>
-                <TableCell>{game.date}</TableCell>
+                <TableCell>
+                  <Link href={`/${game.airtableId}`}>
+                    <a>{game.date}</a>
+                  </Link>
+                </TableCell>
                 <TableCell>
                   {game.flowerCount.axel.total} ({game.flowerCount.axel.atDeal})
                 </TableCell>
@@ -80,7 +82,6 @@ const GamesPage: NextPage<Props> = ({ games }) => {
 
 export const getServerSideProps: GetServerSideProps<Props> = async () => {
   const games = await getGames();
-  console.log(games);
 
   return {
     props: { games }

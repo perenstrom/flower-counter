@@ -14,6 +14,7 @@ export interface FlowerCounts {
 export interface Deal {
   airtableId: string;
   id: number;
+  createdAt: string;
   flowerCount: FlowerCounts;
 }
 
