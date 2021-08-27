@@ -1,6 +1,6 @@
 import Airtable, { FieldSet } from 'airtable';
 import AirtableRecord from 'airtable/lib/record';
-import { Deal, Game } from 'types/types';
+import { Deal, FlowerCount, Game } from 'types/types';
 import { DealRecord, GameRecord } from './airtable.types';
 
 const base = new Airtable().base(process.env.AIRTABLE_DATABASE);
@@ -66,6 +66,32 @@ const formatGame = (gameResponse: AirtableRecord<GameRecord>): Game => ({
   deals: gameResponse.get('deals') || []
 });
 
+export const createDeal = async (gameId: string): Promise<Deal> => {
+  const emptyFlowerCount = (): FlowerCount => ({
+    atDeal: 0,
+    duringGame: 0,
+    total: 0
+  })
+  const newDeal: Partial<Deal> = {
+    game: gameId,
+    flowerCount: {
+      axel: emptyFlowerCount(),
+      arielle: emptyFlowerCount(),
+      sigrid: emptyFlowerCount(),
+      per: emptyFlowerCount()
+    }
+  }
+  return new Promise((resolve, reject) => {
+    dealsBase
+      .create(mapDeal(newDeal))
+      .then((result) => resolve(formatDeal(result)))
+      .catch((error) => {
+        reject(error);
+        console.error(error);
+      });
+  });
+}
+
 export const getDeals = async (dealIds: string[]): Promise<Deal[]> => {
   const query = {
     filterByFormula: `OR(${dealIds
@@ -121,6 +147,7 @@ const formatDeal = (dealResponse: AirtableRecord<DealRecord>): Deal => ({
   airtableId: dealResponse.id,
   id: dealResponse.get('id'),
   createdAt: dealResponse.get('created_at'),
+  game: dealResponse.get('game')[0],
   flowerCount: {
     axel: {
       atDeal: dealResponse.get('axel_flowers_at_deal'),
@@ -148,6 +175,7 @@ const formatDeal = (dealResponse: AirtableRecord<DealRecord>): Deal => ({
 const mapDeal = (deal: Partial<Deal>): DealRecord => ({
   id: deal?.id,
   created_at: deal?.createdAt,
+  game: [deal?.game],
   axel_flowers_at_deal: deal?.flowerCount?.axel?.atDeal,
   axel_flowers_during_game: deal?.flowerCount?.axel?.duringGame,
   axel_flowers_total: undefined,

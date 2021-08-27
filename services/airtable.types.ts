@@ -21,6 +21,7 @@ export interface GameRecord extends FieldSet {
 export interface DealRecord extends FieldSet {
   id: number;
   created_at: string;
+  game: [string];
   axel_flowers_at_deal: number;
   axel_flowers_during_game: number;
   axel_flowers_total: number;

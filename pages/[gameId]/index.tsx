@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Box,
   Button,
@@ -20,6 +20,8 @@ import { getDeals, getGame } from 'services/airtable';
 import { theme } from 'styles/theme';
 import { ParsedUrlQuery } from 'querystring';
 import { formatDate } from 'helpers/utils';
+import { createDeal } from 'services/local';
+import { useRouter } from 'next/router';
 
 const useStyles = makeStyles(() => ({
   main: {
@@ -42,6 +44,19 @@ interface Props {
 
 const GamePage: NextPage<Props> = ({ game, deals }) => {
   const { main, totalRow } = useStyles();
+
+  const [loadingNewDeal, setLoadingNewDeal] = useState(false);
+  const router = useRouter();
+  const newDeal = async () => {
+    setLoadingNewDeal(true);
+    try {
+      const newDeal = await createDeal(game.airtableId);
+      router.push(`/${game.airtableId}/${newDeal.airtableId}`);
+    } catch (error) {
+      setLoadingNewDeal(false);
+    }
+  };
+
   return (
     <Container maxWidth="md" disableGutters={true}>
       <Head>
@@ -56,12 +71,21 @@ const GamePage: NextPage<Props> = ({ game, deals }) => {
           </Link>
         </Box>
         <Box display="flex" alignItems="center">
-          <Typography variant="h5" component="h1">{game.date}</Typography>
+          <Typography variant="h5" component="h1">
+            {game.date}
+          </Typography>
         </Box>
         <Box width={1 / 4}>
-            <Button variant="outlined" color="primary" size="small" fullWidth>
-              Ny giv
-            </Button>
+          <Button
+            variant="outlined"
+            color="primary"
+            size="small"
+            fullWidth
+            onClick={newDeal}
+            disabled={loadingNewDeal}
+          >
+            Ny giv
+          </Button>
         </Box>
       </Box>
       <TableContainer>

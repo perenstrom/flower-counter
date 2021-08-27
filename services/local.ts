@@ -1,5 +1,23 @@
 import { Deal } from "types/types";
 
+export const createDeal = async (
+  gameId: string,
+): Promise<Deal> => {
+  const url = '/api/deals';
+  const options: RequestInit = {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json;charset=UTF-8'
+    },
+    body: JSON.stringify({
+      gameId
+    })
+  };
+
+  return apiResult<Deal>(url, options);
+};
+
 export const updateDeal = async (
   dealId: string,
   deal: Partial<Deal>

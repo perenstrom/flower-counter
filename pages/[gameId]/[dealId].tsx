@@ -12,10 +12,11 @@ import Link from 'next/link';
 import { CountType, Deal, Game, Player } from 'types/types';
 import { getDeal, getGame } from 'services/airtable';
 import { ParsedUrlQuery } from 'querystring';
-import { updateDeal } from 'services/local';
+import { createDeal, updateDeal } from 'services/local';
 import { StateButtons } from 'components/StateButtons';
 import { PlayerState } from 'components/PlayerState';
 import { formatDate } from 'helpers/utils';
+import { useRouter } from 'next/router';
 
 interface Props {
   game: Game;
@@ -146,6 +147,18 @@ const GamePage: NextPage<Props> = ({ game, deal }) => {
     }
   };
 
+  const [loadingNewDeal, setLoadingNewDeal] = useState(false);
+  const router = useRouter();
+  const newDeal = async () => {
+    setLoadingNewDeal(true);
+    try {
+      const newDeal = await createDeal(game.airtableId);
+      router.push(`/${game.airtableId}/${newDeal.airtableId}`);
+    } catch (error) {
+      setLoadingNewDeal(false);
+    }
+  };
+
   return (
     <Container maxWidth="md" disableGutters={true}>
       <Head>
@@ -165,7 +178,14 @@ const GamePage: NextPage<Props> = ({ game, deal }) => {
           </Typography>
         </Box>
         <Box width={1 / 4}>
-          <Button variant="outlined" color="primary" size="small" fullWidth>
+          <Button
+            variant="outlined"
+            color="primary"
+            size="small"
+            fullWidth
+            onClick={newDeal}
+            disabled={loadingNewDeal}
+          >
             Ny giv
           </Button>
         </Box>
