@@ -9,10 +9,13 @@ import {
 import { GetServerSideProps, NextPage } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
-import { Deal, Game, Player } from 'types/types';
+import { CountType, Deal, Game, Player } from 'types/types';
 import { getDeal, getGame } from 'services/airtable';
 import { ParsedUrlQuery } from 'querystring';
 import { updateDeal } from 'services/local';
+import { StateButtons } from 'components/StateButtons';
+import { PlayerState } from 'components/PlayerState';
+import { formatDate } from 'helpers/utils';
 
 interface Props {
   game: Game;
@@ -41,162 +44,152 @@ const GamePage: NextPage<Props> = ({ game, deal }) => {
     deal.flowerCount.per.duringGame
   );
 
-  const updateState = (
-    player: Player,
-    type: 'AtDeal' | 'DuringGame',
-    change: number
-  ) => {
+  const updateState = (player: Player, type: CountType) => {
     // Update airtable
     switch (player) {
       case 'axel':
-        if (type === 'AtDeal') {
-          const newAmount = axelAtDeal + change;
-          updateDeal(deal.airtableId, {
-            flowerCount: {
-              ...deal.flowerCount,
-              axel: { ...deal.flowerCount.axel, atDeal: newAmount }
-            }
-          });
-          setAxelAtDeal(newAmount);
+        if (type === 'atDeal') {
+          return (change) => {
+            const newAmount = axelAtDeal + change;
+            updateDeal(deal.airtableId, {
+              flowerCount: {
+                ...deal.flowerCount,
+                axel: { ...deal.flowerCount.axel, atDeal: newAmount }
+              }
+            });
+            setAxelAtDeal(newAmount);
+          };
         } else {
-          const newAmount = axelDuringGame + change;
-          updateDeal(deal.airtableId, {
-            flowerCount: {
-              ...deal.flowerCount,
-              axel: { ...deal.flowerCount.axel, duringGame: newAmount }
-            }
-          });
-          setAxelDuringGame(newAmount);
+          return (change) => {
+            const newAmount = axelDuringGame + change;
+            updateDeal(deal.airtableId, {
+              flowerCount: {
+                ...deal.flowerCount,
+                axel: { ...deal.flowerCount.axel, duringGame: newAmount }
+              }
+            });
+            setAxelDuringGame(newAmount);
+          };
         }
-        break;
       case 'arielle':
-        if (type === 'AtDeal') {
-          const newAmount = arielleAtDeal + change;
-          updateDeal(deal.airtableId, {
-            flowerCount: {
-              ...deal.flowerCount,
-              arielle: { ...deal.flowerCount.arielle, atDeal: newAmount }
-            }
-          });
-          setArielleAtDeal(newAmount);
+        if (type === 'atDeal') {
+          return (change) => {
+            const newAmount = arielleAtDeal + change;
+            updateDeal(deal.airtableId, {
+              flowerCount: {
+                ...deal.flowerCount,
+                arielle: { ...deal.flowerCount.arielle, atDeal: newAmount }
+              }
+            });
+            setArielleAtDeal(newAmount);
+          };
         } else {
-          const newAmount = arielleDuringGame + change;
-          updateDeal(deal.airtableId, {
-            flowerCount: {
-              ...deal.flowerCount,
-              arielle: { ...deal.flowerCount.arielle, duringGame: newAmount }
-            }
-          });
-          setArielleDuringGame(newAmount);
+          return (change) => {
+            const newAmount = arielleDuringGame + change;
+            updateDeal(deal.airtableId, {
+              flowerCount: {
+                ...deal.flowerCount,
+                arielle: { ...deal.flowerCount.arielle, duringGame: newAmount }
+              }
+            });
+            setArielleDuringGame(newAmount);
+          };
         }
-        break;
       case 'sigrid':
-        if (type === 'AtDeal') {
-          const newAmount = sigridAtDeal + change;
-          updateDeal(deal.airtableId, {
-            flowerCount: {
-              ...deal.flowerCount,
-              sigrid: { ...deal.flowerCount.sigrid, atDeal: newAmount }
-            }
-          });
-          setSigridAtDeal(newAmount);
+        if (type === 'atDeal') {
+          return (change) => {
+            const newAmount = sigridAtDeal + change;
+            updateDeal(deal.airtableId, {
+              flowerCount: {
+                ...deal.flowerCount,
+                sigrid: { ...deal.flowerCount.sigrid, atDeal: newAmount }
+              }
+            });
+            setSigridAtDeal(newAmount);
+          };
         } else {
-          const newAmount = sigridDuringGame + change;
-          updateDeal(deal.airtableId, {
-            flowerCount: {
-              ...deal.flowerCount,
-              sigrid: { ...deal.flowerCount.sigrid, duringGame: newAmount }
-            }
-          });
-          setSigridDuringGame(newAmount);
+          return (change) => {
+            const newAmount = sigridDuringGame + change;
+            updateDeal(deal.airtableId, {
+              flowerCount: {
+                ...deal.flowerCount,
+                sigrid: { ...deal.flowerCount.sigrid, duringGame: newAmount }
+              }
+            });
+            setSigridDuringGame(newAmount);
+          };
         }
-        break;
       case 'per':
-        if (type === 'AtDeal') {
-          const newAmount = perAtDeal + change;
-          updateDeal(deal.airtableId, {
-            flowerCount: {
-              ...deal.flowerCount,
-              per: { ...deal.flowerCount.per, atDeal: newAmount }
-            }
-          });
-          setPerAtDeal(newAmount);
+        if (type === 'atDeal') {
+          return (change) => {
+            const newAmount = perAtDeal + change;
+            updateDeal(deal.airtableId, {
+              flowerCount: {
+                ...deal.flowerCount,
+                per: { ...deal.flowerCount.per, atDeal: newAmount }
+              }
+            });
+            setPerAtDeal(newAmount);
+          };
         } else {
-          const newAmount = perDuringGame + change;
-          updateDeal(deal.airtableId, {
-            flowerCount: {
-              ...deal.flowerCount,
-              per: { ...deal.flowerCount.per, duringGame: newAmount }
-            }
-          });
-          setPerDuringGame(newAmount);
+          return (change) => {
+            const newAmount = perDuringGame + change;
+            updateDeal(deal.airtableId, {
+              flowerCount: {
+                ...deal.flowerCount,
+                per: { ...deal.flowerCount.per, duringGame: newAmount }
+              }
+            });
+            setPerDuringGame(newAmount);
+          };
         }
-        break;
     }
   };
 
   return (
     <Container maxWidth="md" disableGutters={true}>
       <Head>
-        <title>Deal</title>
+        <title>{`Deal - ${formatDate(deal.createdAt)}`}</title>
       </Head>
-      <Box padding={1}>
-        <Link href={`/${game.airtableId}`}>
-          <a>Tillbaka</a>
-        </Link>
-      </Box>
-      <Box padding={1}>
-        <Typography variant="h2" align="center">
-          Axel
-        </Typography>
-        <Box display="flex" justifyContent="center">
-          <Box
-            display="flex"
-            flexDirection="column"
-            alignItems="center"
-            marginLeft={1}
-            marginRight={1}
-          >
-            <Box paddingBottom={0.5}>
-              <Typography variant="h3">Vid giv</Typography>
-            </Box>
-            <ButtonGroup size="large">
-              <Button onClick={() => updateState('axel', 'AtDeal', -1)}>
-                -
-              </Button>
-              <Button disabled>{axelAtDeal}</Button>
-              <Button onClick={() => updateState('axel', 'AtDeal', 1)}>
-                +
-              </Button>
-            </ButtonGroup>
-          </Box>
-          <Box
-            display="flex"
-            flexDirection="column"
-            alignItems="center"
-            marginLeft={1}
-            marginRight={1}
-          >
-            <Box paddingBottom={0.5}>
-              <Typography variant="h3">Under spel</Typography>
-            </Box>
-            <ButtonGroup size="large">
-              <Button>-</Button>
-              <Button disabled>{axelDuringGame}</Button>
-              <Button>+</Button>
-            </ButtonGroup>
-          </Box>
+      <Box padding={1} display="flex" justifyContent="space-between">
+        <Box width={1 / 4}>
+          <Link href={`/${game.airtableId}`} passHref>
+            <Button variant="outlined" color="primary" size="small" fullWidth>
+              Tillbaka
+            </Button>
+          </Link>
+        </Box>
+        <Box display="flex" alignItems="center">
+          <Typography variant="h5" component="h1">
+            {formatDate(deal.createdAt)}
+          </Typography>
+        </Box>
+        <Box width={1 / 4}>
+          <Button variant="outlined" color="primary" size="small" fullWidth>
+            Ny giv
+          </Button>
         </Box>
       </Box>
-      <Box padding={1}>
-        <Box>Arielle</Box>
-      </Box>
-      <Box padding={1}>
-        <Box>Sigrid</Box>
-      </Box>
-      <Box padding={1}>
-        <Box>Per</Box>
-      </Box>
+      <PlayerState
+        player={'axel'}
+        value={{ atDeal: axelAtDeal, duringGame: axelDuringGame }}
+        updateState={updateState}
+      />
+      <PlayerState
+        player={'arielle'}
+        value={{ atDeal: arielleAtDeal, duringGame: arielleDuringGame }}
+        updateState={updateState}
+      />
+      <PlayerState
+        player={'sigrid'}
+        value={{ atDeal: sigridAtDeal, duringGame: sigridDuringGame }}
+        updateState={updateState}
+      />
+      <PlayerState
+        player={'per'}
+        value={{ atDeal: perAtDeal, duringGame: perDuringGame }}
+        updateState={updateState}
+      />
     </Container>
   );
 };

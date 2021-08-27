@@ -1,6 +1,7 @@
 import React from 'react';
 import {
   Box,
+  Button,
   Container,
   makeStyles,
   Table,
@@ -8,7 +9,8 @@ import {
   TableCell,
   TableContainer,
   TableHead,
-  TableRow
+  TableRow,
+  Typography
 } from '@material-ui/core';
 import { GetServerSideProps, NextPage } from 'next';
 import Head from 'next/head';
@@ -17,6 +19,7 @@ import { Deal, Game } from 'types/types';
 import { getDeals, getGame } from 'services/airtable';
 import { theme } from 'styles/theme';
 import { ParsedUrlQuery } from 'querystring';
+import { formatDate } from 'helpers/utils';
 
 const useStyles = makeStyles(() => ({
   main: {
@@ -32,11 +35,6 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
-const formatDate = (dateString: string): string => {
-  const date = new Date(dateString);
-  return date.toLocaleTimeString();
-};
-
 interface Props {
   game: Game;
   deals: Record<string, Deal>;
@@ -49,16 +47,28 @@ const GamePage: NextPage<Props> = ({ game, deals }) => {
       <Head>
         <title>Games</title>
       </Head>
-      <Box padding={1}>
-        <Link href={`/`}>
-          <a>Tillbaka</a>
-        </Link>
+      <Box padding={1} display="flex" justifyContent="space-between">
+        <Box width={1 / 4}>
+          <Link href={`/`} passHref>
+            <Button variant="outlined" color="primary" size="small" fullWidth>
+              Tillbaka
+            </Button>
+          </Link>
+        </Box>
+        <Box display="flex" alignItems="center">
+          <Typography variant="h5" component="h1">{game.date}</Typography>
+        </Box>
+        <Box width={1 / 4}>
+            <Button variant="outlined" color="primary" size="small" fullWidth>
+              Ny giv
+            </Button>
+        </Box>
       </Box>
       <TableContainer>
         <Table size="small" className={main}>
           <TableHead>
             <TableRow>
-              <TableCell>Time</TableCell>
+              <TableCell>Tid</TableCell>
               <TableCell>Axel</TableCell>
               <TableCell>Arielle</TableCell>
               <TableCell>Sigrid</TableCell>

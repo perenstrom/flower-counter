@@ -1,5 +1,7 @@
 import React from 'react';
 import {
+  Box,
+  Button,
   Container,
   makeStyles,
   Table,
@@ -7,7 +9,8 @@ import {
   TableCell,
   TableContainer,
   TableHead,
-  TableRow
+  TableRow,
+  Typography
 } from '@material-ui/core';
 import { GetServerSideProps, NextPage } from 'next';
 import Head from 'next/head';
@@ -38,11 +41,26 @@ const GamesPage: NextPage<Props> = ({ games }) => {
       <Head>
         <title>Games</title>
       </Head>
+      <Box padding={1} display="flex" justifyContent="space-between">
+        <Box width={1 / 4}>
+
+        </Box>
+        <Box display="flex" alignItems="center">
+          <Typography variant="h5" component="h1">Alla spel</Typography>
+        </Box>
+        <Box width={1 / 4}>
+          <Link href={`/`} passHref>
+            <Button variant="outlined" color="primary" size="small" fullWidth>
+              Nytt spel
+            </Button>
+          </Link>
+        </Box>
+      </Box>
       <TableContainer>
         <Table size="small" className={main}>
           <TableHead>
             <TableRow>
-              <TableCell>Date</TableCell>
+              <TableCell>Datum</TableCell>
               <TableCell>Axel</TableCell>
               <TableCell>Arielle</TableCell>
               <TableCell>Sigrid</TableCell>

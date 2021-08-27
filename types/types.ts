@@ -27,3 +27,4 @@ export interface Game {
 }
 
 export type Player = 'axel' | 'arielle' | 'sigrid' | 'per';
+export type CountType = 'atDeal' | 'duringGame';
