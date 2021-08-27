@@ -25,3 +25,5 @@ export interface Game {
   date: string;
   flowerCount: FlowerCounts;
 }
+
+export type Player = 'axel' | 'arielle' | 'sigrid' | 'per';

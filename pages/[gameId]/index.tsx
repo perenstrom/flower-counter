@@ -95,7 +95,11 @@ const GamePage: NextPage<Props> = ({ game, deals }) => {
             </TableRow>
             {game.deals.map((dealId) => (
               <TableRow key={dealId}>
-                <TableCell>{formatDate(deals[dealId].createdAt)}</TableCell>
+                <TableCell>
+                  <Link href={`/${game.airtableId}/${dealId}`}>
+                    <a>{formatDate(deals[dealId].createdAt)}</a>
+                  </Link>
+                </TableCell>
                 <TableCell>
                   {deals[dealId].flowerCount.axel.total} (
                   {deals[dealId].flowerCount.axel.atDeal})

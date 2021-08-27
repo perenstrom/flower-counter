@@ -85,6 +85,38 @@ export const getDeals = async (dealIds: string[]): Promise<Deal[]> => {
   return deals;
 };
 
+export const getDeal = async (dealId: string): Promise<Deal> => {
+  const query = {
+    filterByFormula: `RECORD_ID()='${dealId}'`
+  };
+
+  const deals: Deal[] = [];
+  await dealsBase.select(query).eachPage((dealsResult, fetchNextPage) => {
+    dealsResult.forEach((deal) => {
+      deals.push(formatDeal(deal));
+    });
+
+    fetchNextPage();
+  });
+
+  return deals[0];
+};
+
+export const updateDeal = async (
+  dealId: string,
+  deal: Partial<Deal>
+): Promise<Deal> => {
+  return new Promise((resolve, reject) => {
+    dealsBase
+      .update(dealId, mapDeal(deal))
+      .then((result) => resolve(formatDeal(result)))
+      .catch((error) => {
+        reject(error);
+        console.error(error);
+      });
+  });
+};
+
 const formatDeal = (dealResponse: AirtableRecord<DealRecord>): Deal => ({
   airtableId: dealResponse.id,
   id: dealResponse.get('id'),
@@ -111,4 +143,21 @@ const formatDeal = (dealResponse: AirtableRecord<DealRecord>): Deal => ({
       total: dealResponse.get('axel_flowers_total')
     }
   }
+});
+
+const mapDeal = (deal: Partial<Deal>): DealRecord => ({
+  id: deal?.id,
+  created_at: deal?.createdAt,
+  axel_flowers_at_deal: deal?.flowerCount?.axel?.atDeal,
+  axel_flowers_during_game: deal?.flowerCount?.axel?.duringGame,
+  axel_flowers_total: undefined,
+  arielle_flowers_at_deal: deal?.flowerCount?.arielle?.atDeal,
+  arielle_flowers_during_game: deal?.flowerCount?.arielle?.duringGame,
+  arielle_flowers_total: undefined,
+  sigrid_flowers_at_deal: deal?.flowerCount?.sigrid?.atDeal,
+  sigrid_flowers_during_game: deal?.flowerCount?.sigrid?.duringGame,
+  sigrid_flowers_total: undefined,
+  per_flowers_at_deal: deal?.flowerCount?.per?.atDeal,
+  per_flowers_during_game: deal?.flowerCount?.per?.duringGame,
+  per_flowers_total: undefined
 });
