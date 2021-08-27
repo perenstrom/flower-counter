@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import {
   Box,
   Button,
-  ButtonGroup,
   Container,
   Typography
 } from '@material-ui/core';
@@ -13,7 +12,6 @@ import { CountType, Deal, Game, Player } from 'types/types';
 import { getDeal, getGame } from 'services/airtable';
 import { ParsedUrlQuery } from 'querystring';
 import { createDeal, updateDeal } from 'services/local';
-import { StateButtons } from 'components/StateButtons';
 import { PlayerState } from 'components/PlayerState';
 import { formatDate } from 'helpers/utils';
 import { useRouter } from 'next/router';

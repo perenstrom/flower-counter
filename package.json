@@ -8,11 +8,13 @@
     "start": "next start",
     "what": "ECHO Package system: npm",
     "test": "jest",
-    "test-watch": "jest --watch"
+    "test-watch": "jest --watch",
+    "lint": "next lint"
   },
   "dependencies": {
     "@material-ui/core": "^4.12.2",
     "@material-ui/lab": "^4.0.0-alpha.60",
+    "@typescript-eslint/eslint-plugin": "^4.29.3",
     "airtable": "^0.11.1",
     "next": "^11.0.1",
     "react": "^17.0.2",
@@ -23,6 +25,7 @@
     "@types/node": "^16.4.0",
     "@types/react": "^17.0.14",
     "eslint": "^7.31.0",
+    "eslint-config-next": "^11.1.0",
     "eslint-plugin-jest": "^24.4.0",
     "eslint-plugin-react": "^7.24.0",
     "eslint-plugin-react-hooks": "^4.2.0",

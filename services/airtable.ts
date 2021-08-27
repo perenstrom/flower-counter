@@ -7,6 +7,24 @@ const base = new Airtable().base(process.env.AIRTABLE_DATABASE);
 const gamesBase = base<GameRecord>('games');
 const dealsBase = base<DealRecord>('deals');
 
+export const createGame = async (): Promise<Game> => {
+  const today = new Date();
+  const formattedDate = today.toISOString().split('T')[0];
+
+  const newGame: Partial<GameRecord> = {
+    date: formattedDate
+  };
+  return new Promise((resolve, reject) => {
+    gamesBase
+      .create(newGame)
+      .then((result) => resolve(formatGame(result)))
+      .catch((error) => {
+        reject(error);
+        console.error(error);
+      });
+  });
+};
+
 export const getGames = async (): Promise<Game[]> => {
   const games: Game[] = [];
   await gamesBase.select({}).eachPage((gamesResult, fetchNextPage) => {
@@ -71,7 +89,7 @@ export const createDeal = async (gameId: string): Promise<Deal> => {
     atDeal: 0,
     duringGame: 0,
     total: 0
-  })
+  });
   const newDeal: Partial<Deal> = {
     game: gameId,
     flowerCount: {
@@ -80,7 +98,7 @@ export const createDeal = async (gameId: string): Promise<Deal> => {
       sigrid: emptyFlowerCount(),
       per: emptyFlowerCount()
     }
-  }
+  };
   return new Promise((resolve, reject) => {
     dealsBase
       .create(mapDeal(newDeal))
@@ -90,7 +108,7 @@ export const createDeal = async (gameId: string): Promise<Deal> => {
         console.error(error);
       });
   });
-}
+};
 
 export const getDeals = async (dealIds: string[]): Promise<Deal[]> => {
   const query = {

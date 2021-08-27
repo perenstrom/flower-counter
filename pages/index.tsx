@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Box,
   Button,
@@ -18,6 +18,8 @@ import Link from 'next/link';
 import { Game } from 'types/types';
 import { getGames } from 'services/airtable';
 import { theme } from 'styles/theme';
+import { useRouter } from 'next/router';
+import { createGame } from 'services/local';
 
 const useStyles = makeStyles(() => ({
   main: {
@@ -36,21 +38,41 @@ interface Props {
 
 const GamesPage: NextPage<Props> = ({ games }) => {
   const { main } = useStyles();
+
+  const [loadingNewGame, setLoadingNewGame] = useState(false);
+  const router = useRouter();
+  const newGame = async () => {
+    setLoadingNewGame(true);
+    try {
+      const newGame = await createGame();
+      router.push(`/${newGame.airtableId}`);
+    } catch (error) {
+      setLoadingNewGame(false);
+    }
+  };
+
   return (
     <Container maxWidth="md" disableGutters={true}>
       <Head>
         <title>Games</title>
       </Head>
       <Box padding={1} display="flex" justifyContent="space-between">
-        <Box width={1 / 4}>
-
-        </Box>
+        <Box width={1 / 4}></Box>
         <Box display="flex" alignItems="center">
-          <Typography variant="h5" component="h1">Alla spel</Typography>
+          <Typography variant="h5" component="h1">
+            Alla spel
+          </Typography>
         </Box>
         <Box width={1 / 4}>
           <Link href={`/`} passHref>
-            <Button variant="outlined" color="primary" size="small" fullWidth>
+            <Button
+              variant="outlined"
+              color="primary"
+              size="small"
+              fullWidth
+              onClick={newGame}
+              disabled={loadingNewGame}
+            >
               Nytt spel
             </Button>
           </Link>

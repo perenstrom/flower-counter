@@ -1,8 +1,19 @@
-import { Deal } from "types/types";
+import { Deal, Game } from 'types/types';
 
-export const createDeal = async (
-  gameId: string,
-): Promise<Deal> => {
+export const createGame = async (): Promise<Game> => {
+  const url = '/api/games';
+  const options: RequestInit = {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json;charset=UTF-8'
+    }
+  };
+
+  return apiResult<Game>(url, options);
+};
+
+export const createDeal = async (gameId: string): Promise<Deal> => {
   const url = '/api/deals';
   const options: RequestInit = {
     method: 'POST',
