@@ -193,7 +193,7 @@ const formatDeal = (dealResponse: AirtableRecord<DealRecord>): Deal => ({
 const mapDeal = (deal: Partial<Deal>): DealRecord => ({
   id: deal?.id,
   created_at: deal?.createdAt,
-  game: [deal?.game],
+  game: deal?.game ? [deal?.game] : undefined,
   axel_flowers_at_deal: deal?.flowerCount?.axel?.atDeal,
   axel_flowers_during_game: deal?.flowerCount?.axel?.duringGame,
   axel_flowers_total: undefined,
