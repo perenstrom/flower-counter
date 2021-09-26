@@ -1,4 +1,4 @@
-import Airtable, { FieldSet } from 'airtable';
+import Airtable from 'airtable';
 import AirtableRecord from 'airtable/lib/record';
 import { Deal, FlowerCount, Game } from 'types/types';
 import { DealRecord, GameRecord } from './airtable.types';
@@ -66,19 +66,19 @@ const formatGame = (gameResponse: AirtableRecord<GameRecord>): Game => ({
       total: gameResponse.get('axel_flowers_total')
     },
     arielle: {
-      atDeal: gameResponse.get('axel_flowers_at_deal'),
-      duringGame: gameResponse.get('axel_flowers_during_game'),
-      total: gameResponse.get('axel_flowers_total')
+      atDeal: gameResponse.get('arielle_flowers_at_deal'),
+      duringGame: gameResponse.get('arielle_flowers_during_game'),
+      total: gameResponse.get('arielle_flowers_total')
     },
     sigrid: {
-      atDeal: gameResponse.get('axel_flowers_at_deal'),
-      duringGame: gameResponse.get('axel_flowers_during_game'),
-      total: gameResponse.get('axel_flowers_total')
+      atDeal: gameResponse.get('sigrid_flowers_at_deal'),
+      duringGame: gameResponse.get('sigrid_flowers_during_game'),
+      total: gameResponse.get('sigrid_flowers_total')
     },
     per: {
-      atDeal: gameResponse.get('axel_flowers_at_deal'),
-      duringGame: gameResponse.get('axel_flowers_during_game'),
-      total: gameResponse.get('axel_flowers_total')
+      atDeal: gameResponse.get('per_flowers_at_deal'),
+      duringGame: gameResponse.get('per_flowers_during_game'),
+      total: gameResponse.get('per_flowers_total')
     }
   },
   deals: gameResponse.get('deals') || []
@@ -173,19 +173,19 @@ const formatDeal = (dealResponse: AirtableRecord<DealRecord>): Deal => ({
       total: dealResponse.get('axel_flowers_total')
     },
     arielle: {
-      atDeal: dealResponse.get('axel_flowers_at_deal'),
-      duringGame: dealResponse.get('axel_flowers_during_game'),
-      total: dealResponse.get('axel_flowers_total')
+      atDeal: dealResponse.get('arielle_flowers_at_deal'),
+      duringGame: dealResponse.get('arielle_flowers_during_game'),
+      total: dealResponse.get('arielle_flowers_total')
     },
     sigrid: {
-      atDeal: dealResponse.get('axel_flowers_at_deal'),
-      duringGame: dealResponse.get('axel_flowers_during_game'),
-      total: dealResponse.get('axel_flowers_total')
+      atDeal: dealResponse.get('sigrid_flowers_at_deal'),
+      duringGame: dealResponse.get('sigrid_flowers_during_game'),
+      total: dealResponse.get('sigrid_flowers_total')
     },
     per: {
-      atDeal: dealResponse.get('axel_flowers_at_deal'),
-      duringGame: dealResponse.get('axel_flowers_during_game'),
-      total: dealResponse.get('axel_flowers_total')
+      atDeal: dealResponse.get('per_flowers_at_deal'),
+      duringGame: dealResponse.get('per_flowers_during_game'),
+      total: dealResponse.get('per_flowers_total')
     }
   }
 });
